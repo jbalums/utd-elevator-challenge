@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Elevator Visualizer</title>
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+	<body>
+		<div class="app-shell">
+			<header class="app-header">
+				<p class="eyebrow">Level 8</p>
+				<h1>Elevator Visualizer</h1>
+				<p class="intro">
+					Queue riders, run the simulation, and watch the elevator move
+					floor-by-floor through pickups and drop-offs.
+				</p>
+			</header>
+
+			<main class="workspace">
+				<section class="control-panel">
+					<div class="panel-block">
+						<p class="panel-label">Quick Scenarios</p>
+						<div class="scenario-grid">
+							<button type="button" class="scenario-button" data-scenario="single-up">
+								Single Up
+							</button>
+							<button
+								type="button"
+								class="scenario-button"
+								data-scenario="single-down"
+							>
+								Single Down
+							</button>
+							<button type="button" class="scenario-button" data-scenario="bob-sue">
+								Bob and Sue
+							</button>
+							<button
+								type="button"
+								class="scenario-button"
+								data-scenario="mixed-pair"
+							>
+								Mixed Pair
+							</button>
+						</div>
+					</div>
+
+					<div class="panel-block">
+						<p class="panel-label">Add Rider</p>
+						<form id="request-form" class="request-form">
+							<label>
+								<span>Name</span>
+								<input id="name-input" name="name" type="text" placeholder="Anne" required />
+							</label>
+							<label>
+								<span>Current Floor</span>
+								<input
+									id="current-floor-input"
+									name="currentFloor"
+									type="number"
+									min="0"
+									max="9"
+									value="0"
+									required
+								/>
+							</label>
+							<label>
+								<span>Drop-Off Floor</span>
+								<input
+									id="dropoff-floor-input"
+									name="dropOffFloor"
+									type="number"
+									min="0"
+									max="9"
+									value="5"
+									required
+								/>
+							</label>
+							<button type="submit" class="primary-button">Add To Queue</button>
+						</form>
+					</div>
+
+					<div class="panel-block">
+						<div class="action-row">
+							<button type="button" id="run-button" class="primary-button">
+								Run Simulation
+							</button>
+							<button type="button" id="clear-button" class="ghost-button">
+								Clear Queue
+							</button>
+						</div>
+					</div>
+
+					<div class="panel-block">
+						<p class="panel-label">Queued Riders</p>
+						<ul id="queue-list" class="queue-list"></ul>
+					</div>
+				</section>
+
+				<section class="visual-panel">
+					<div class="status-strip">
+						<div>
+							<span class="metric-label">Current Floor</span>
+							<strong id="metric-floor">0</strong>
+						</div>
+						<div>
+							<span class="metric-label">Stops</span>
+							<strong id="metric-stops">0</strong>
+						</div>
+						<div>
+							<span class="metric-label">Floors Traversed</span>
+							<strong id="metric-traversed">0</strong>
+						</div>
+					</div>
+
+					<div class="visual-layout">
+						<div class="shaft-panel">
+							<div id="shaft" class="shaft">
+								<div id="elevator-car" class="elevator-car">
+									<div class="car-roof"></div>
+									<div class="car-body">
+										<p class="car-label">Elevator</p>
+										<div id="car-riders" class="car-riders"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="detail-panel">
+							<div>
+								<p class="panel-label">Pending Requests</p>
+								<ul id="active-requests" class="detail-list"></ul>
+							</div>
+							<div>
+								<p class="panel-label">Activity Log</p>
+								<ul id="activity-log" class="detail-list log-list"></ul>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+
+		<script type="module" src="./app.js"></script>
+	</body>
+</html>

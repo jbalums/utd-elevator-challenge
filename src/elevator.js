@@ -8,6 +8,10 @@ export default class Elevator {
 	}
 
 	dispatch() {
+		if (this.hasStop()) {
+			this.processCurrentFloor(true);
+		}
+
 		let direction = this.getDispatchDirection();
 
 		while (this.requests.length > 0 || this.riders.length > 0) {
