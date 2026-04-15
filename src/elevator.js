@@ -33,6 +33,15 @@ export default class Elevator {
 		}
 	}
 
+	dispatchInRequestOrder() {
+		const pendingRequests = [...this.requests];
+		this.requests = [];
+
+		while (pendingRequests.length > 0) {
+			this.goToFloor(pendingRequests.shift());
+		}
+	}
+
 	goToFloor(person, shouldCheckReturnToLoby = true) {
 		if (!this.requests.includes(person) && !this.riders.includes(person)) {
 			this.requests.push(person);
