@@ -27,9 +27,13 @@ export default class Elevator {
 
 			this.processCurrentFloor();
 		}
+
+		if (this.checkReturnToLoby()) {
+			this.returnToLoby();
+		}
 	}
 
-	goToFloor(person) {
+	goToFloor(person, shouldCheckReturnToLoby = true) {
 		if (!this.requests.includes(person) && !this.riders.includes(person)) {
 			this.requests.push(person);
 		}
@@ -44,7 +48,7 @@ export default class Elevator {
 			this.processCurrentFloor(true);
 		}
 
-		if (this.checkReturnToLoby()) {
+		if (shouldCheckReturnToLoby && this.checkReturnToLoby()) {
 			this.returnToLoby();
 		}
 	}
@@ -168,4 +172,5 @@ export default class Elevator {
 			this.riders.some((rider) => rider.dropOffFloor < this.currentFloor)
 		);
 	}
+
 }
