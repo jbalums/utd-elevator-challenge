@@ -1,0 +1,139 @@
+export default class Elevator {
+	constructor() {
+		this.currentFloor = 0;
+		this.stops = 0;
+		this.floorsTraversed = 0;
+		this.requests = [];
+		this.riders = [];
+	}
+
+	dispatch() {
+		while (this.requests.length > 0 || this.riders.length > 0) {
+			const nextStop = this.requests[0] || this.riders[0];
+
+			if (!nextStop) {
+				break;
+			}
+
+			this.goToFloor(nextStop);
+		}
+	}
+
+	goToFloor(person) {
+		if (!this.requests.includes(person) && !this.riders.includes(person)) {
+			this.requests.push(person);
+		}
+
+		if (!this.riders.includes(person)) {
+			this.travelToFloor(person.currentFloor);
+			this.processCurrentFloor(true);
+		}
+
+		if (this.riders.includes(person)) {
+			this.travelToFloor(person.dropOffFloor);
+			this.processCurrentFloor(true);
+		}
+
+		if (this.checkReturnToLoby()) {
+			this.returnToLoby();
+		}
+	}
+
+	moveUp() {
+		this.currentFloor++;
+		this.floorsTraversed++;
+		if (this.hasStop()) {
+			this.stops++;
+		}
+	}
+
+	moveDown() {
+		if (this.currentFloor > 0) {
+			this.currentFloor--;
+			this.floorsTraversed++;
+			if (this.hasStop()) {
+				this.stops++;
+			}
+		}
+	}
+
+	hasStop() {
+		return (
+			this.requests.some((request) => request.currentFloor === this.currentFloor) ||
+			this.riders.some((rider) => rider.dropOffFloor === this.currentFloor)
+		);
+	}
+
+	hasPickup() {
+		const pickups = this.requests.filter(
+			(request) => request.currentFloor === this.currentFloor,
+		);
+
+		if (pickups.length === 0) {
+			return false;
+		}
+
+		this.requests = this.requests.filter(
+			(request) => request.currentFloor !== this.currentFloor,
+		);
+		this.riders.push(...pickups);
+
+		return true;
+	}
+
+	hasDropoff() {
+		const ridersBeforeDropoff = this.riders.length;
+
+		this.riders = this.riders.filter(
+			(rider) => rider.dropOffFloor !== this.currentFloor,
+		);
+
+		return this.riders.length !== ridersBeforeDropoff;
+	}
+
+	checkReturnToLoby() {
+		return (
+			this.currentFloor > 0 &&
+			this.requests.length === 0 &&
+			this.riders.length === 0 &&
+			new Date().getHours() < 12
+		);
+	}
+
+	returnToLoby() {
+		while (this.currentFloor > 0) {
+			this.moveDown();
+		}
+	}
+
+	reset() {
+		this.currentFloor = 0;
+		this.stops = 0;
+		this.floorsTraversed = 0;
+		this.requests = [];
+		this.riders = [];
+	}
+
+	processCurrentFloor(countStop = false) {
+		const hadStop = this.hasStop();
+
+		if (countStop && hadStop) {
+			this.stops++;
+		}
+
+		this.hasDropoff();
+		this.hasPickup();
+	}
+
+	travelToFloor(targetFloor) {
+		while (this.currentFloor < targetFloor) {
+			this.moveUp();
+			this.processCurrentFloor();
+		}
+
+		while (this.currentFloor > targetFloor) {
+			this.moveDown();
+			this.processCurrentFloor();
+		}
+	}
+}
