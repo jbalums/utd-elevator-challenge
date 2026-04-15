@@ -17,6 +17,34 @@ When you start a new level, read through the level's specification and write fai
 
 Clone this repository and run `npm install` to install testing dependencies.
 
+## How To Run The Tests
+
+Run all level-based test files:
+
+```bash
+BABEL_DISABLE_CACHE=1 ./node_modules/.bin/mocha tests/level_2_test.cjs tests/level_3_test.cjs tests/level_4_test.cjs tests/level_5_test.cjs tests/level_6_test.cjs tests/level_7_test.cjs
+```
+
+Run the original test file:
+
+```bash
+BABEL_DISABLE_CACHE=1 ./node_modules/.bin/mocha tests/elevator_test.cjs
+```
+
+## How To Run The App
+
+Serve the project root with a simple local server:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
 ### Level 0
 
 Sketch out the elevator process on pencil and paper. What kinds of things do you need to keep track of? What is a modern elevator's pickup and drop off strategy?
