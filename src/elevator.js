@@ -8,14 +8,24 @@ export default class Elevator {
 	}
 
 	dispatch() {
-		while (this.requests.length > 0 || this.riders.length > 0) {
-			const nextStop = this.requests[0] || this.riders[0];
+		let direction = this.getDispatchDirection();
 
-			if (!nextStop) {
+		while (this.requests.length > 0 || this.riders.length > 0) {
+			if (!this.hasPendingStopInDirection(direction)) {
+				direction = direction === "up" ? "down" : "up";
+			}
+
+			if (!this.hasPendingStopInDirection(direction)) {
 				break;
 			}
 
-			this.goToFloor(nextStop);
+			if (direction === "up") {
+				this.moveUp();
+			} else {
+				this.moveDown();
+			}
+
+			this.processCurrentFloor();
 		}
 	}
 
@@ -135,5 +145,27 @@ export default class Elevator {
 			this.moveDown();
 			this.processCurrentFloor();
 		}
+	}
+
+	getDispatchDirection() {
+		if (this.requests.length === 0) {
+			return "up";
+		}
+
+		return this.requests[0].currentFloor >= this.currentFloor ? "up" : "down";
+	}
+
+	hasPendingStopInDirection(direction) {
+		if (direction === "up") {
+			return (
+				this.requests.some((request) => request.currentFloor > this.currentFloor) ||
+				this.riders.some((rider) => rider.dropOffFloor > this.currentFloor)
+			);
+		}
+
+		return (
+			this.requests.some((request) => request.currentFloor < this.currentFloor) ||
+			this.riders.some((rider) => rider.dropOffFloor < this.currentFloor)
+		);
 	}
 }
